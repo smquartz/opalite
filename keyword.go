@@ -100,6 +100,9 @@ func (km *keywordManager) peek(str string) []preidentifiedToken {
 
 func initKeywordManager() (*keywordManager, error) {
 	km := new(keywordManager)
+	km.fileExtensions = make(map[string]keyword)
+	km.keys = make(map[string]keyword)
+
 	optionsDefault := keywordOption{}
 	optionsInvalid := keywordOption{invalid: true}
 	optionsUnidentifiable := keywordOption{unidentifiable: true}

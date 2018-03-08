@@ -85,11 +85,15 @@ func (ec elementCategory) isSingular() bool {
 var elems *elements
 
 type elements struct {
-	elements       map[elementCategory]string
+	elements       map[elementCategory][]string
 	checkAltNumber bool
 }
 
 func (e *elements) insert(cat elementCategory, content string) {
+	e.elements[cat] = []string{content}
+}
+
+func (e *elements) insertSlice(cat elementCategory, content []string) {
 	e.elements[cat] = content
 }
 
