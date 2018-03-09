@@ -1,4 +1,4 @@
-package anitogo2
+package anitogo
 
 // keywordOptinos describes parameters of a keyword
 type keywordOptions struct {

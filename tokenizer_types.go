@@ -1,4 +1,4 @@
-package anitogo2
+package anitogo
 
 // TokenizerOptions configures the tokenizer's behaviour
 type TokenizerOptions struct {

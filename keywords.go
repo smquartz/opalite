@@ -1,4 +1,4 @@
-package anitogo2
+package anitogo
 
 func newKeywordManager() *keywordManager {
 	km := new(keywordManager)

@@ -12,4 +12,6 @@ var (
 	ErrorInvalidEpisodeNumber             = errors.New("the provided episode number string does not represent a valid episode number")
 	ErrorUnrecognisedOrdinal              = errors.New("unrecognised ordinal provided")
 	ErrorKeywordManagerMapsNotInitialized = errors.New("keywordManager has uninitialised maps and thus entries could not be added to them")
+	ErrorKeywordNotFound                  = errors.New("requested keyword was not found")
+	ErrorPlaceholder                      = errors.New("this is a placeholder error")
 )

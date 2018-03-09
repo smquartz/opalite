@@ -1,4 +1,4 @@
-package anitogo2
+package anitogo
 
 import "github.com/juju/errors"
 

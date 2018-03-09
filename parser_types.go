@@ -1,4 +1,4 @@
-package anitogo2
+package anitogo
 
 type parser struct {
 	AnimeFile AnimeFile

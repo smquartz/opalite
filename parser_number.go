@@ -22,57 +22,67 @@ func validEpisodeNumber(numstr string) bool {
 	return num <= episodeNumberMax
 }
 
-func setEpisodeNumber(numstr string, tkn token, validate bool) error {
+func (p *parser) SetEpisodeNumber(numstr string, tkn *token, validate bool) error {
 	if validate && !validEpisodeNumber(numstr) {
 		return errors.Trace(ErrorInvalidEpisodeNumber)
 	}
 
-	tkn.category = tokenCategoryIdentifier
+	tkn.Category = tokenCategoryIdentifier
 
-	category := elementCategoryEpisodeNumber
+	category := categoryEpisodeNumber
+	var episodeNumber uint
+	var num uint
 
 	// handle equivalent numbers
-	if elems.checkAltNumber {
+	if p.AnimeFile.checkAltNumber {
 		// TODO: check if getting only the first episode number is enough
-		episodeNumberStr := elems.elements[elementCategoryEpisodeNumber][0]
-		num, err := strconv.ParseUint(numstr, 10, 16)
+		episodeNumber = p.AnimeFile.EpisodeNumber[0]
+		num64, err := strconv.ParseUint(numstr, 10, 16)
 		if err != nil {
 			return errors.Trace(ErrorInvalidEpisodeNumber)
 		}
-		episodeNumber, err := strconv.ParseUint(episodeNumberStr, 10, 16)
-		if err != nil {
-			return errors.Trace(ErrorInvalidEpisodeNumber)
-		}
+		num = uint(num64)
 
 		if num > episodeNumber {
-			category = elementCategoryEpisodeNumberAlt
+			category = categoryEpisodeNumberAlt
 		} else if num < episodeNumber {
-			delete(elems.elements, elementCategoryEpisodeNumber)
-			elems.insert(elementCategoryEpisodeNumberAlt, episodeNumberStr)
+			p.AnimeFile.EpisodeNumber = []uint{}
+			p.AnimeFile.EpisodeNumberAlt = episodeNumber
 		}
 	}
 
-	elems.insert(category, numstr)
-	return errors.Trace(nil)
-}
-
-func setAlternativeEpisodeNumber(numstr string, tkn *token) error {
-	elems.insert(elementCategoryEpisodeNumberAlt, numstr)
-	tkn.category = tokenCategoryIdentifier
+	if category == categoryEpisodeNumber {
+		p.AnimeFile.EpisodeNumber = []uint{episodeNumber}
+	} else if category == categoryEpisodeNumberAlt {
+		p.AnimeFile.EpisodeNumberAlt = episodeNumber
+	}
 
 	return errors.Trace(nil)
 }
 
-func (t tokens) checkExtentKeyword(cat elementCategory, tkn *token) error {
-	nextToken, err := t.findNext(*tkn, tokenFlagNotDelimiter)
+func (p *parser) SetAlternativeEpisodeNumber(numstr string, tkn *token) error {
+	num, err := strconv.ParseUint(numstr, 10, 16)
+	if err != nil {
+		return errors.Trace(err)
+	}
+	p.AnimeFile.EpisodeNumberAlt = uint(num)
+	tkn.Category = tokenCategoryIdentifier
+
+	return errors.Trace(nil)
+}
+
+func (p *parser) CheckExtentKeyword(cat category, tkn *token) error {
+	nextToken, err := p.tokenizer.tokenManager.tokens.FindNext(tkn, tokenFlagsNotDelimiter)
 	if err != nil {
 		return errors.Trace(err)
 	}
 
-	if nextToken.category == tokenCategoryUnknown {
-		if !nextToken.empty() && findNumberInString(nextToken.content) > -1 {
-			if cat == elementCategoryEpisodeNumber {
-				if !match
+	if nextToken.Category == tokenCategoryUnknown {
+		if !nextToken.Empty() && findNumberInString(nextToken.Content) > -1 {
+			if cat == categoryEpisodeNumber {
+				if !p.MatchEpisodePattern(nextToken.Content, nextToken) {
+					p.SetEpisodeNumber(nextToken.Content, nextToken, false)
+				}
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package anitogo2
+package anitogo
 
 func (k keywordDescriptor) Empty() bool {
 	return k == keywordDescriptor{}

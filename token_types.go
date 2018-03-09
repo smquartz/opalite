@@ -1,4 +1,4 @@
-package anitogo2
+package anitogo
 
 // describes a category of token
 type tokenCategory int
