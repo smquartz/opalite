@@ -88,6 +88,11 @@ func isMostlyLatinString(str string) bool {
 	return (float32(latinLength) / float32(len(str))) >= 0.5
 }
 
+func numberComesAfterPrefix(cat category, tkn *token) bool {
+	numberBegin := findNumberInString(tkn.Content)
+	prefix := tkn.Content[:numberBegin]
+}
+
 func (p *parser) SetAnimeSeason(first, second *token, content string) error {
 	contentNum, err := strconv.ParseUint(content, 10, 16)
 	if err != nil {

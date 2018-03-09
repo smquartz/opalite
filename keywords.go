@@ -1,5 +1,12 @@
 package anitogo
 
+import (
+	"log"
+	"strings"
+
+	"github.com/juju/errors"
+)
+
 func newKeywordManager() *keywordManager {
 	km := new(keywordManager)
 	km.keywords = make(keywords)
@@ -83,4 +90,22 @@ func newKeywordManager() *keywordManager {
 	km.BulkSetKeywords(categoryVolumePrefix, optionsDefault, []keyword{"VOL", "VOL.", "VOLUME"})
 
 	return km
+}
+
+func (km *keywordManager) Peek(text string) ([]indexSet, error) {
+	var preidentifiedTokens []indexSet
+
+	for kwd, desc := range km.keywords {
+		keywordBeginIndex := strings.Index(text, string(kwd))
+		// if keyword is found in text
+		if keywordBeginIndex != -1 {
+			// insert keyword into "elements" (anitopy object)
+			log.Println("expected to insert into 'elements' here")
+
+			keywordEndIndex := keywordBeginIndex + len(kwd)
+			preidentifiedTokens = append(preidentifiedTokens, indexSet{Begin: keywordBeginIndex, End: keywordEndIndex})
+		}
+	}
+
+	return preidentifiedTokens, errors.Trace(nil)
 }

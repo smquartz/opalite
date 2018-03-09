@@ -49,6 +49,13 @@ type token struct {
 // tokens describes a slice of token pointers
 type tokens []*token
 
+// tokenManager describes a "manager" struct that stores token pointers
 type tokenManager struct {
 	tokens tokens
+}
+
+// indexSet describes a pair of start and finish indexes
+type indexSet struct {
+	Begin int
+	End   int
 }

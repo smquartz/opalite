@@ -12,6 +12,11 @@ func (t token) Empty() bool {
 	return t == token{}
 }
 
+// Empty returns whether the tokenManager has no tokens in it
+func (tm tokenManager) Empty() bool {
+	return len(tm.tokens) <= 0
+}
+
 // GetIndex returns the index of a token
 func (t tokens) GetIndex(tkn token) (int, error) {
 	for i, tk := range t {

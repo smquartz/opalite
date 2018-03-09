@@ -72,7 +72,7 @@ func (p *parser) SetAlternativeEpisodeNumber(numstr string, tkn *token) error {
 }
 
 func (p *parser) CheckExtentKeyword(cat category, tkn *token) error {
-	nextToken, err := p.tokenizer.tokenManager.tokens.FindNext(tkn, tokenFlagsNotDelimiter)
+	nextToken, err := p.tokenizer.tokenManager.tokens.FindNext(*tkn, tokenFlagsNotDelimiter)
 	if err != nil {
 		return errors.Trace(err)
 	}
@@ -83,9 +83,18 @@ func (p *parser) CheckExtentKeyword(cat category, tkn *token) error {
 				if !p.MatchEpisodePattern(nextToken.Content, nextToken) {
 					p.SetEpisodeNumber(nextToken.Content, nextToken, false)
 				}
+			} else if cat == categoryVolumeNumber {
+				if !p.matchVolumePattern(nextToken.Content, nextToken) {
+					p.SetVolumeNumber(nextToken.Content, nextToken, false)
+				}
+			} else {
+				// not implemented?
+				return errors.Trace(ErrorPlaceholder)
 			}
+			tkn.Category = tokenCategoryIdentifier
+			return errors.Trace(nil)
 		}
 	}
 
-	return errors.Trace(nil)
+	return errors.Trace(ErrorPlaceholder)
 }

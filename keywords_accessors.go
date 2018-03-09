@@ -3,7 +3,7 @@ package anitogo
 import "github.com/juju/errors"
 
 func (k *keywordManager) SetKeyword(cat category, options keywordOptions, kwd keyword) error {
-	if !k.initialised() {
+	if !k.Initialised() {
 		return errors.Trace(ErrorKeywordManagerMapsNotInitialized)
 	}
 
@@ -17,6 +17,9 @@ func (k *keywordManager) SetKeyword(cat category, options keywordOptions, kwd ke
 }
 
 func (k *keywordManager) BulkSetKeywords(cat category, options keywordOptions, kwds []keyword) error {
+	if !k.Initialised() {
+		return errors.Trace(ErrorKeywordManagerMapsNotInitialized)
+	}
 	for i, kwd := range kwds {
 		err := k.SetKeyword(cat, options, kwd)
 		if err != nil {
@@ -27,7 +30,7 @@ func (k *keywordManager) BulkSetKeywords(cat category, options keywordOptions, k
 }
 
 func (k keywordManager) GetKeyword(kwd keyword) (keywordDescriptor, error) {
-	if !k.initialised() {
+	if !k.Initialised() {
 		return keywordDescriptor{}, errors.Trace(ErrorKeywordManagerMapsNotInitialized)
 	}
 
